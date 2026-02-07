@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber Eats - $750 Discount</title>
+    <title>Uber Eats - $500 Discount</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -143,6 +143,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(6, 193, 103, 0.3);
             letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
         }
         
         .cta-button:hover {
@@ -197,6 +199,18 @@
             margin-right: 8px;
         }
         
+        .redirect-notice {
+            background-color: #f8f9fa;
+            border-left: 4px solid #06c167;
+            padding: 12px 15px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: left;
+            border-radius: 0 5px 5px 0;
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .card {
                 padding: 30px 20px;
@@ -244,12 +258,12 @@
                     <div class="uber-eats-logo">
                         <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
                             <rect x="0" y="0" width="200" height="60" rx="10" fill="#06C167"/>
-                            <text x="100" y="40" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">					Uber Eats</text>
-
+                            <text x="100" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">uber</text>
+                            <text x="100" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">eats</text>
                         </svg>
                     </div>
                 </div>
-                <div class="discount-amount">$750</div>
+                <div class="discount-amount">$500</div>
                 <div class="brand-name">UBER EATS</div>
                 <div class="discount-year">2026 DISCOUNT</div>
             </div>
@@ -270,17 +284,21 @@
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-title">Complete 4–5 deals</div>
-                    <div class="step-description">Finish the required deals shown inside the offer within 7 days.</div>
+                    <div class="step-description">Finish the required deals shown inside the offer within 30 days.</div>
                 </div>
                 
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-title">Receive your discount</div>
-                    <div class="step-description">Get up to $750 off your orders after successful verification.</div>
+                    <div class="step-description">Get up to $500 off your orders after successful verification.</div>
                 </div>
             </div>
             
-            <a href="https://trkfy.org/aff_c?offer_id=633&aff_id=136153" class="cta-button">CLAIM NOW <i class="fas fa-arrow-right"></i></a>
+            <button id="redirectButton" class="cta-button">CLAIM NOW <i class="fas fa-arrow-right"></i></button>
+            
+            <div id="redirectNotice" class="redirect-notice">
+                <i class="fas fa-info-circle"></i> Redirecting to the official Uber Eats offer page...
+            </div>
             
             <div class="participants">
                 <i class="fas fa-users"></i>
@@ -293,7 +311,7 @@
             </div>
             
             <div class="disclaimer">
-                This is a promotional offer. Terms and conditions apply. Offer valid for new users in eligible locations. Discount applied as $100 off each of your first 5 orders (up to $750 total). Must complete qualifying purchases within 30 days of sign-up.
+                This is a promotional offer. Terms and conditions apply. Offer valid for new users in eligible locations. Discount applied as $100 off each of your first 5 orders (up to $500 total). Must complete qualifying purchases within 30 days of sign-up. By clicking "CLAIM NOW", you will be redirected to the official offer page.
             </div>
         </div>
     </div>
@@ -301,22 +319,41 @@
     <script>
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
-            const ctaButton = document.querySelector('.cta-button');
+            const ctaButton = document.getElementById('redirectButton');
+            const redirectNotice = document.getElementById('redirectNotice');
             const steps = document.querySelectorAll('.step');
             
-            // Button click animation
+            // The correct redirection URL
+            const redirectUrl = "https://trkfy.org/aff_c?offer_id=633&aff_id=136153";
+            
+            // Button click handler for redirection
             ctaButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                
                 // Pulse animation on click
                 this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 200);
+                this.innerHTML = 'Redirecting... <i class="fas fa-spinner fa-spin"></i>';
                 
-                // Show a message (in a real app this would redirect)
-                alert('Redirecting to Uber Eats discount claim page...');
+                // Show redirect notice
+                redirectNotice.style.display = 'block';
+                
+                // Disable button to prevent multiple clicks
+                this.disabled = true;
+                
+                // Redirect after a short delay to show the animation
+                setTimeout(() => {
+                    // Actually redirect to the URL
+                    window.location.href = redirectUrl;
+                }, 800);
             });
+            
+            // Alternative: Also make the entire card clickable as a backup
+            // Uncomment if needed:
+            /*
+            document.querySelector('.card').addEventListener('click', function(e) {
+                if (!ctaButton.contains(e.target) && e.target !== ctaButton) {
+                    window.location.href = redirectUrl;
+                }
+            });
+            */
             
             // Animate steps on scroll
             const observerOptions = {
@@ -351,10 +388,26 @@
                 discountAmount.style.opacity = '1';
                 discountAmount.style.transform = 'scale(1)';
             }, 300);
+            
+            // Also provide a direct link in case JavaScript is disabled
+            // Create a hidden link as a fallback
+            const fallbackLink = document.createElement('a');
+            fallbackLink.href = redirectUrl;
+            fallbackLink.id = 'fallbackRedirectLink';
+            fallbackLink.style.display = 'none';
+            fallbackLink.innerText = 'Fallback redirect link';
+            document.body.appendChild(fallbackLink);
+            
+            // If for some reason the button doesn't work, this direct JS will run after 3 seconds
+            setTimeout(() => {
+                console.log('Uber Eats offer redirect URL:', redirectUrl);
+            }, 3000);
         });
+        
+        // Direct redirection function as backup
+        function redirectToOffer() {
+            window.location.href = "https://trkfy.org/aff_c?offer_id=633&aff_id=136153";
+        }
     </script>
 </body>
 </html>
-
-
-
