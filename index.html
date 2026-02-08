@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber Eats Entry - $750 Promotional Sweepstakes</title>
+    <title>Uber Eats - $750 Entry</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -22,7 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-bottom: 100px;
+            padding-bottom: 100px; /* Add padding for the sticky button */
         }
         
         .container {
@@ -43,8 +43,6 @@
         
         .header {
             margin-bottom: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 25px;
         }
         
         .logo-container {
@@ -54,40 +52,55 @@
         .uber-eats-logo {
             width: 180px;
             height: auto;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
         }
         
-        .headline {
-            font-size: 3.8rem;
+        .discount-amount {
+            font-size: 5.5rem;
             font-weight: 800;
             color: #06c167;
             line-height: 1;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
         
-        .subheadline {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
+        .brand-name {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
         }
         
-        .trust-text {
-            font-size: 0.9rem;
-            color: #ff6b35;
-            background-color: #fff5f2;
-            padding: 8px 15px;
-            border-radius: 8px;
-            display: inline-block;
+        .subheadline {
+            font-size: 1.4rem;
+            color: #666;
             margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .trust-notice {
+            display: inline-block;
+            background-color: #fff5f2;
+            color: #ff6b35;
+            padding: 8px 20px;
+            border-radius: 50px;
             font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
             border: 1px solid #ffe8e0;
         }
         
-        .trust-text i {
-            margin-right: 5px;
+        .discount-year {
+            display: inline-block;
+            background-color: #06c167;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
         }
         
         .steps-container {
@@ -106,8 +119,6 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease;
-            text-align: left;
-            border-left: 4px solid #06c167;
         }
         
         .step:hover {
@@ -126,12 +137,11 @@
             font-size: 1.3rem;
             line-height: 40px;
             margin-bottom: 15px;
-            text-align: center;
         }
         
         .step-title {
-            font-weight: 700;
-            font-size: 1.3rem;
+            font-weight: 600;
+            font-size: 1.2rem;
             margin-bottom: 10px;
             color: #222;
         }
@@ -139,46 +149,31 @@
         .step-description {
             color: #666;
             font-size: 0.95rem;
-            line-height: 1.5;
+            margin-bottom: 8px;
         }
         
         .step-warning {
             color: #ff6b35;
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .step-warning i {
-            margin-right: 5px;
-        }
-        
-        .cta-section {
-            margin: 40px 0 30px;
-            padding: 30px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            border: 2px dashed #06c167;
+            font-size: 0.85rem;
+            font-style: italic;
         }
         
         .cta-button {
             display: inline-block;
             background-color: #06c167;
             color: white;
-            font-size: 1.8rem;
-            font-weight: 800;
-            padding: 22px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            padding: 18px 40px;
             border-radius: 50px;
             text-decoration: none;
-            margin: 10px 0 15px;
+            margin: 20px 0 15px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(6, 193, 103, 0.3);
             letter-spacing: 0.5px;
             border: none;
             cursor: pointer;
-            text-transform: uppercase;
         }
         
         .cta-button:hover {
@@ -187,10 +182,19 @@
             box-shadow: 0 8px 20px rgba(6, 193, 103, 0.4);
         }
         
+        .cta-button i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-button:hover i {
+            transform: translateX(5px);
+        }
+        
         .cta-subtext {
             font-size: 0.9rem;
             color: #666;
-            margin-top: 10px;
+            margin-bottom: 10px;
             font-style: italic;
         }
         
@@ -228,12 +232,8 @@
             font-size: 0.75rem;
             color: #888;
             margin-top: 30px;
-            line-height: 1.6;
-            text-align: left;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #ccc;
+            line-height: 1.5;
+            text-align: center;
         }
         
         .disclaimer strong {
@@ -289,7 +289,6 @@
             border: none;
             cursor: pointer;
             text-align: center;
-            text-transform: uppercase;
         }
         
         .mobile-sticky-button .sticky-button:hover {
@@ -310,7 +309,7 @@
         }
         
         .mobile-sticky-subtext {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #666;
             margin-top: 5px;
             font-style: italic;
@@ -318,15 +317,15 @@
         
         @media (max-width: 768px) {
             .card {
-                padding: 25px 15px;
+                padding: 30px 20px;
             }
             
-            .headline {
-                font-size: 3rem;
+            .discount-amount {
+                font-size: 4.5rem;
             }
             
-            .subheadline {
-                font-size: 1.5rem;
+            .brand-name {
+                font-size: 2.2rem;
             }
             
             .steps-container {
@@ -338,12 +337,8 @@
             }
             
             .cta-button {
-                font-size: 1.5rem;
-                padding: 18px 35px;
-            }
-            
-            .cta-section {
-                padding: 20px 15px;
+                font-size: 1.2rem;
+                padding: 16px 30px;
             }
             
             /* Show the mobile sticky button on mobile */
@@ -358,12 +353,12 @@
         }
         
         @media (max-width: 480px) {
-            .headline {
-                font-size: 2.5rem;
+            .discount-amount {
+                font-size: 3.8rem;
             }
             
-            .subheadline {
-                font-size: 1.3rem;
+            .brand-name {
+                font-size: 1.8rem;
             }
             
             .mobile-sticky-button {
@@ -373,11 +368,6 @@
             .mobile-sticky-button .sticky-button {
                 font-size: 1.2rem;
                 padding: 14px;
-            }
-            
-            .trust-text {
-                font-size: 0.8rem;
-                padding: 6px 10px;
             }
         }
     </style>
@@ -396,11 +386,11 @@
                         </svg>
                     </div>
                 </div>
-                <div class="headline">$750 Uber Eats Entry</div>
+                <div class="discount-amount">$750</div>
+                <div class="brand-name">UBER EATS ENTRY</div>
                 <div class="subheadline">US promotional sweepstakes</div>
-                <div class="trust-text">
-                    <i class="fas fa-exclamation-circle"></i> Not instant. Entry requires completion of steps below.
-                </div>
+                <div class="trust-notice">Not instant. Entry requires completion of steps below.</div>
+                <div class="discount-year">2026 SWEEPSTAKES</div>
             </div>
             
             <div class="steps-container">
@@ -420,9 +410,7 @@
                     <div class="step-number">3</div>
                     <div class="step-title">Complete 3–5 sponsor offers</div>
                     <div class="step-description">Required to validate your entry</div>
-                    <div class="step-warning">
-                        <i class="fas fa-clock"></i> Takes time — do not skip
-                    </div>
+                    <div class="step-warning">Takes time — do not skip</div>
                 </div>
                 
                 <div class="step">
@@ -432,13 +420,11 @@
                 </div>
             </div>
             
-            <div class="cta-section">
-                <button id="redirectButton" class="cta-button">Start Entry</button>
-                <div class="cta-subtext">Read each step carefully</div>
-                
-                <div id="redirectNotice" class="redirect-notice">
-                    <i class="fas fa-info-circle"></i> Redirecting to the official entry page...
-                </div>
+            <button id="redirectButton" class="cta-button">Start Entry <i class="fas fa-arrow-right"></i></button>
+            <div class="cta-subtext">Read each step carefully</div>
+            
+            <div id="redirectNotice" class="redirect-notice">
+                <i class="fas fa-info-circle"></i> Redirecting to the official entry page...
             </div>
             
             <div class="participants">
@@ -539,7 +525,7 @@
                         // Reset main button too if needed
                         if (isMobile && ctaButton !== button) {
                             ctaButton.disabled = false;
-                            ctaButton.innerHTML = 'Start Entry';
+                            ctaButton.innerHTML = 'Start Entry <i class="fas fa-arrow-right"></i>';
                         }
                         
                         // Show error message
@@ -593,7 +579,6 @@
                 
                 const mainButtonInView = isElementInViewport(ctaButton);
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const scrollingUp = scrollTop < lastScrollTop;
                 
                 // If main button is in view, hide the sticky button
                 if (mainButtonInView) {
@@ -603,7 +588,7 @@
                     mobileStickyContainer.classList.remove('hidden');
                 }
                 
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             }
             
             // Throttle the scroll event for performance
@@ -623,33 +608,11 @@
             // Initial check
             updateStickyButtonVisibility();
             
-            // Add smooth scrolling for better UX
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId !== '#') {
-                        const targetElement = document.querySelector(targetId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
-            });
-            
             // If for some reason the button doesn't work, this direct JS will run after 3 seconds
             setTimeout(() => {
                 console.log('Uber Eats entry redirect URL:', redirectUrl);
             }, 3000);
         });
-        
-        // Direct redirection function as backup
-        function redirectToEntry() {
-            window.location.href = "https://trkfy.org/aff_c?offer_id=633&aff_id=136153";
-        }
     </script>
 </body>
 </html>
