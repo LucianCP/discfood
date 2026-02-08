@@ -225,6 +225,12 @@
             z-index: 1000;
             border-top: 1px solid #eee;
             text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-sticky-button.hidden {
+            transform: translateY(100%);
         }
         
         .mobile-sticky-button .sticky-button {
@@ -402,9 +408,27 @@
             const redirectNotice = document.getElementById('redirectNotice');
             const mobileRedirectNotice = document.getElementById('mobileRedirectNotice');
             const steps = document.querySelectorAll('.step');
+            const mobileStickyContainer = document.querySelector('.mobile-sticky-button');
             
             // The correct redirection URL
             const redirectUrl = "https://trkfy.org/aff_c?offer_id=633&aff_id=136153";
+            
+            // Function to check if main button is in viewport
+            function isElementInViewport(el) {
+                if (!el) return false;
+                
+                const rect = el.getBoundingClientRect();
+                const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+                
+                // Check if element is within viewport with some buffer
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (windowHeight + 150) && // 150px buffer at bottom
+                    rect.right <= windowWidth
+                );
+            }
             
             // Function to handle redirection with visual feedback
             function handleRedirect(button, noticeElement, isMobile = false) {
@@ -426,6 +450,7 @@
                 // For mobile, also disable the main button to prevent confusion
                 if (isMobile && ctaButton !== button) {
                     ctaButton.disabled = true;
+                    ctaButton.innerHTML = 'Redirecting... <i class="fas fa-spinner fa-spin"></i>';
                 }
                 
                 // Redirect after a short delay to show the animation
@@ -443,6 +468,12 @@
                         
                         if (noticeElement) {
                             noticeElement.style.display = 'none';
+                        }
+                        
+                        // Reset main button too if needed
+                        if (isMobile && ctaButton !== button) {
+                            ctaButton.disabled = false;
+                            ctaButton.innerHTML = 'CLAIM NOW <i class="fas fa-arrow-right"></i>';
                         }
                         
                         // Show error message
@@ -497,6 +528,46 @@
                 discountAmount.style.transform = 'scale(1)';
             }, 300);
             
+            // Track scroll to show/hide mobile sticky button based on main button visibility
+            let lastScrollTop = 0;
+            let ticking = false;
+            
+            function updateStickyButtonVisibility() {
+                // Only run on mobile
+                if (window.innerWidth > 768) return;
+                
+                const mainButtonInView = isElementInViewport(ctaButton);
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollingUp = scrollTop < lastScrollTop;
+                
+                // If main button is in view, hide the sticky button
+                if (mainButtonInView) {
+                    mobileStickyContainer.classList.add('hidden');
+                } else {
+                    // If main button is NOT in view, show the sticky button
+                    mobileStickyContainer.classList.remove('hidden');
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            }
+            
+            // Throttle the scroll event for performance
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        updateStickyButtonVisibility();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Also check on resize
+            window.addEventListener('resize', updateStickyButtonVisibility);
+            
+            // Initial check
+            updateStickyButtonVisibility();
+            
             // Also provide a direct link in case JavaScript is disabled
             // Create a hidden link as a fallback
             const fallbackLink = document.createElement('a');
@@ -506,47 +577,10 @@
             fallbackLink.innerText = 'Fallback redirect link';
             document.body.appendChild(fallbackLink);
             
-            // Add smooth scrolling for better UX
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId !== '#') {
-                        const targetElement = document.querySelector(targetId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
-            });
-            
             // If for some reason the button doesn't work, this direct JS will run after 3 seconds
             setTimeout(() => {
                 console.log('Uber Eats offer redirect URL:', redirectUrl);
             }, 3000);
-            
-            // Add visibility tracking for the sticky button
-            let lastScrollPosition = 0;
-            const mobileStickyContainer = document.querySelector('.mobile-sticky-button');
-            
-            window.addEventListener('scroll', function() {
-                const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                
-                // Show/hide sticky button based on scroll direction
-                if (currentScrollPosition > lastScrollPosition && currentScrollPosition > 100) {
-                    // Scrolling down, hide the button with a slight delay
-                    mobileStickyContainer.style.transform = 'translateY(100%)';
-                    mobileStickyContainer.style.transition = 'transform 0.3s ease';
-                } else {
-                    // Scrolling up or at top, show the button
-                    mobileStickyContainer.style.transform = 'translateY(0)';
-                }
-                
-                lastScrollPosition = currentScrollPosition;
-            });
         });
         
         // Direct redirection function as backup
