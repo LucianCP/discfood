@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uber Eats - $750 Discount</title>
+    <title>Uber Eats - $500 Discount</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -22,6 +22,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-bottom: 100px; /* Add padding for the sticky button */
         }
         
         .container {
@@ -211,6 +212,56 @@
             display: none;
         }
         
+        /* Mobile Sticky Button */
+        .mobile-sticky-button {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .mobile-sticky-button .sticky-button {
+            display: block;
+            width: 100%;
+            background-color: #06c167;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(6, 193, 103, 0.3);
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .mobile-sticky-button .sticky-button:hover {
+            background-color: #05a85a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(6, 193, 103, 0.4);
+        }
+        
+        .mobile-sticky-button .sticky-button i {
+            margin-left: 8px;
+        }
+        
+        .mobile-sticky-button .sticky-notice {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 8px;
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .card {
                 padding: 30px 20px;
@@ -236,6 +287,16 @@
                 font-size: 1.2rem;
                 padding: 16px 30px;
             }
+            
+            /* Show the mobile sticky button on mobile */
+            .mobile-sticky-button {
+                display: block;
+            }
+            
+            /* Add more padding to body to account for sticky button */
+            body {
+                padding-bottom: 120px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -245,6 +306,15 @@
             
             .brand-name {
                 font-size: 1.8rem;
+            }
+            
+            .mobile-sticky-button {
+                padding: 12px 15px;
+            }
+            
+            .mobile-sticky-button .sticky-button {
+                font-size: 1.2rem;
+                padding: 14px;
             }
         }
     </style>
@@ -263,7 +333,7 @@
                         </svg>
                     </div>
                 </div>
-                <div class="discount-amount">$750</div>
+                <div class="discount-amount">$500</div>
                 <div class="brand-name">UBER EATS</div>
                 <div class="discount-year">2026 DISCOUNT</div>
             </div>
@@ -290,7 +360,7 @@
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-title">Receive your discount</div>
-                    <div class="step-description">Get up to $750 off your orders after successful verification.</div>
+                    <div class="step-description">Get up to $500 off your orders after successful verification.</div>
                 </div>
             </div>
             
@@ -311,8 +381,16 @@
             </div>
             
             <div class="disclaimer">
-                This is a promotional offer. Terms and conditions apply. Offer valid for new users in eligible locations. Discount applied as $100 off each of your first 5 orders (up to $750 total). Must complete qualifying purchases within 30 days of sign-up. By clicking "CLAIM NOW", you will be redirected to the official offer page.
+                This is a promotional offer. Terms and conditions apply. Offer valid for new users in eligible locations. Discount applied as $100 off each of your first 5 orders (up to $500 total). Must complete qualifying purchases within 30 days of sign-up. By clicking "CLAIM NOW", you will be redirected to the official offer page.
             </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Sticky Button -->
+    <div class="mobile-sticky-button">
+        <button id="mobileStickyButton" class="sticky-button">CLAIM NOW <i class="fas fa-arrow-right"></i></button>
+        <div id="mobileRedirectNotice" class="sticky-notice">
+            <i class="fas fa-info-circle"></i> Redirecting...
         </div>
     </div>
 
@@ -320,40 +398,70 @@
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
             const ctaButton = document.getElementById('redirectButton');
+            const mobileStickyButton = document.getElementById('mobileStickyButton');
             const redirectNotice = document.getElementById('redirectNotice');
+            const mobileRedirectNotice = document.getElementById('mobileRedirectNotice');
             const steps = document.querySelectorAll('.step');
             
             // The correct redirection URL
             const redirectUrl = "https://trkfy.org/aff_c?offer_id=633&aff_id=136153";
             
-            // Button click handler for redirection
-            ctaButton.addEventListener('click', function(e) {
-                // Pulse animation on click
-                this.style.transform = 'scale(0.95)';
-                this.innerHTML = 'Redirecting... <i class="fas fa-spinner fa-spin"></i>';
+            // Function to handle redirection with visual feedback
+            function handleRedirect(button, noticeElement, isMobile = false) {
+                // Store original button content
+                const originalContent = button.innerHTML;
                 
-                // Show redirect notice
-                redirectNotice.style.display = 'block';
+                // Pulse animation on click
+                button.style.transform = 'scale(0.95)';
+                button.innerHTML = 'Redirecting... <i class="fas fa-spinner fa-spin"></i>';
+                
+                // Show redirect notice if available
+                if (noticeElement) {
+                    noticeElement.style.display = 'block';
+                }
                 
                 // Disable button to prevent multiple clicks
-                this.disabled = true;
+                button.disabled = true;
+                
+                // For mobile, also disable the main button to prevent confusion
+                if (isMobile && ctaButton !== button) {
+                    ctaButton.disabled = true;
+                }
                 
                 // Redirect after a short delay to show the animation
                 setTimeout(() => {
                     // Actually redirect to the URL
                     window.location.href = redirectUrl;
                 }, 800);
+                
+                // Fallback: if redirection fails, reset button after 3 seconds
+                setTimeout(() => {
+                    if (!window.location.href.includes('trkfy.org')) {
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                        button.style.transform = 'scale(1)';
+                        
+                        if (noticeElement) {
+                            noticeElement.style.display = 'none';
+                        }
+                        
+                        // Show error message
+                        alert('Redirection failed. Please try again or copy this link: ' + redirectUrl);
+                    }
+                }, 3000);
+            }
+            
+            // Main button click handler for redirection
+            ctaButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                handleRedirect(this, redirectNotice, false);
             });
             
-            // Alternative: Also make the entire card clickable as a backup
-            // Uncomment if needed:
-            /*
-            document.querySelector('.card').addEventListener('click', function(e) {
-                if (!ctaButton.contains(e.target) && e.target !== ctaButton) {
-                    window.location.href = redirectUrl;
-                }
+            // Mobile sticky button click handler
+            mobileStickyButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                handleRedirect(this, mobileRedirectNotice, true);
             });
-            */
             
             // Animate steps on scroll
             const observerOptions = {
@@ -398,10 +506,47 @@
             fallbackLink.innerText = 'Fallback redirect link';
             document.body.appendChild(fallbackLink);
             
+            // Add smooth scrolling for better UX
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+            
             // If for some reason the button doesn't work, this direct JS will run after 3 seconds
             setTimeout(() => {
                 console.log('Uber Eats offer redirect URL:', redirectUrl);
             }, 3000);
+            
+            // Add visibility tracking for the sticky button
+            let lastScrollPosition = 0;
+            const mobileStickyContainer = document.querySelector('.mobile-sticky-button');
+            
+            window.addEventListener('scroll', function() {
+                const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Show/hide sticky button based on scroll direction
+                if (currentScrollPosition > lastScrollPosition && currentScrollPosition > 100) {
+                    // Scrolling down, hide the button with a slight delay
+                    mobileStickyContainer.style.transform = 'translateY(100%)';
+                    mobileStickyContainer.style.transition = 'transform 0.3s ease';
+                } else {
+                    // Scrolling up or at top, show the button
+                    mobileStickyContainer.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollPosition = currentScrollPosition;
+            });
         });
         
         // Direct redirection function as backup
@@ -411,4 +556,3 @@
     </script>
 </body>
 </html>
-
